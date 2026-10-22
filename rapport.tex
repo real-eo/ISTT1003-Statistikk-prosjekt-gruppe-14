@@ -1,0 +1,375 @@
+% Block 3 poster - Tasks 1 to 4.5
+% Compile with pdflatex. Figures are read from the folder Plots/ :
+%   task1_step.pdf, task2_pole_zero.pdf, task3_pi_window.pdf, task4_designs.pdf
+\documentclass[8pt]{extarticle}
+\usepackage[a3paper,portrait,margin=9mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\setlength{\columnsep}{7mm}
+
+\graphicspath{{Plots/}}
+\definecolor{ntnu}{HTML}{00509E}
+\definecolor{soft}{HTML}{EAF1F8}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+\setlist{leftmargin=1.2em,itemsep=1pt,topsep=2pt,parsep=0pt}
+
+% numbered section bar, same look as the Block 2 poster
+\newcounter{psec}
+\newcommand{\psection}[1]{%
+  \refstepcounter{psec}\vspace{5pt}%
+  \colorbox{ntnu}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+    \color{white}\sffamily\bfseries\large\thepsec\quad #1}}\par\vspace{2pt}}
+
+% framed key result
+\newtcolorbox{keybox}{colback=soft,colframe=ntnu,boxrule=0.5pt,arc=0pt,
+  left=4pt,right=4pt,top=3pt,bottom=3pt,before skip=5pt,after skip=5pt}
+
+\newcommand{\PO}{\mathrm{P.O.}}
+\newcommand{\zwn}{\zeta\omega_n}
+\newcommand{\ub}{\bar u}
+\newcommand{\ib}{\bar\imath_L}
+\newcommand{\vb}{\bar v_C}
+
+\begin{document}
+
+% ---------------------------------------------------------------- title
+
+
+\begin{multicols}{2}\raggedcolumns
+% ================================================================ TASK 1
+\psection{Task 1: overshoot and peak time fix the poles}
+
+Template closed loop, with $\zeta$ and $\omega_n$ free:
+\[
+G(s)=\frac{\omega_n^2}{s^2+2\zeta\omega_n s+\omega_n^2},
+\qquad s_{1,2}=\alpha\pm j\beta=-\zwn\pm j\,\omega_n\sqrt{1-\zeta^2}.
+\]
+The poles equal to the eigenvalues $\alpha\pm j\beta$ from Block~2.
+The slope of the step response is proportional to $e^{\alpha t}\sin\beta t$,
+so the first peak is at $\beta t=\pi$.
+
+\begin{keybox}
+\[
+T_p=\frac{\pi}{\beta}=\frac{\pi}{\omega_n\sqrt{1-\zeta^2}},
+\qquad
+\frac{\PO}{100}=e^{-\zwn T_p}=\exp\!\Big(\frac{-\pi\zeta}{\sqrt{1-\zeta^2}}\Big)
+\]
+\end{keybox}
+
+\[
+L=\ln\frac{\PO}{100}:\quad
+\zeta=\frac{|L|}{\sqrt{\pi^2+L^2}},\qquad
+\omega_n=\frac{\pi}{T_p\sqrt{1-\zeta^2}},\qquad
+\zwn=\frac{|L|}{T_p}.
+\]
+$\PO$ sets $\zeta$ alone (the angle of the poles), $T_p$ then sets $\beta$
+(their height), so any pair of specifications can be met. For 5\,\%, 1\,ms:
+$\zeta=0.690$, $\omega_n=4341$\,rad/s, poles $-2996\pm j3142$.
+
+\begin{minipage}[c]{0.42\linewidth}
+\includegraphics[width=\linewidth]{task1_step.pdf}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.50\linewidth}\centering
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+\multicolumn{2}{c}{Specified} & \multicolumn{2}{c}{\texttt{stepinfo}}\\
+\cmidrule(r){1-2}\cmidrule(l){3-4}
+P.O. & $T_p$ & P.O. & $T_p$\\
+\midrule
+5\,\%  & 1\,ms & 5.00\,\%  & 0.999\,ms\\
+5\,\%  & 3\,ms & 5.00\,\%  & 3.0\,ms\\
+12\,\% & 1\,ms & 12.00\,\% & 0.999\,ms\\
+18\,\% & 1\,ms & 18.00\,\% & 0.994\,ms\\
+\bottomrule
+\end{tabular}
+\end{minipage}
+
+
+% ================================================================ TASK 2
+\psection{Task 2: when an extra pole or zero can be ignored}
+
+\[
+H(s)=\frac{(\gamma/a)(s+a)\,\omega_n^2}{(s^2+2\zeta\omega_n s+\omega_n^2)(s+\gamma)}
+\]
+The factor $\gamma/a$ gives $H(0)=1$ for any $\gamma$ and $a$, so only the
+transient changes. Design fixed at 5\,\%, 1\,ms; $\gamma$ and $a$ in units of
+$10\,\zwn$, one moved at a time.
+
+\begin{minipage}[c]{0.42\linewidth}
+\includegraphics[width=\linewidth]{task2_pole_zero.pdf}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.50\linewidth}\centering
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$\dfrac{\gamma}{10\zwn}$ & $\dfrac{a}{10\zwn}$ & P.O. & $T_p$\\
+\midrule
+1   & 10  & 4.94\,\%  & 1.03\,ms\\
+10  & 1   & 5.06\,\%  & 0.97\,ms\\
+0.1 & 10  & 0\,\%     & no peak\\
+10  & 0.1 & 23.4\,\%  & 0.51\,ms\\
+0.1 & 0.1 & 5.00\,\%  & 1.00\,ms\\
+\bottomrule
+\end{tabular}
+\end{minipage}
+
+\begin{itemize}
+\item At the $10\,\zwn$ boundary the error is 0.06 percentage
+  points in overshoot and 3\,\% in peak time.
+\item A close zero gives $y_H=y_G+\tfrac1a\,\dot y_G$: faster, more
+  overshoot. A close pole is a low-pass filter: slower, no overshoot.
+\end{itemize}
+
+
+% ================================================================ TASK 3
+\psection{Task 3: a PI on a first-order plant leaves a narrow window}
+
+Plant $G=\dfrac{k}{s+\alpha}$ with $k=-5$, $\alpha=20$; controller
+$G_c=\kappa_P\dfrac{s+\gamma}{s}$. With $L=N/D$, unity feedback gives
+$T=N/(D+N)$:
+\[
+T(s)=\frac{k\kappa_P\,(s+\gamma)}{s^2+(\alpha+k\kappa_P)\,s+k\kappa_P\gamma}
+\]
+Matching the denominator to $s^2+2\zwn s+\omega_n^2$:
+
+\begin{keybox}
+\[
+\kappa_P=\frac{2\zwn-\alpha}{k},\qquad
+\gamma=\frac{\omega_n^2}{2\zwn-\alpha}
+\]
+\end{keybox}
+
+Two gains, two specifications: the zero is forced. It stays out of the way
+only if $|\gamma|\ge 10\,\zwn$, which for $\PO=5\,\%$ gives
+\[
+13.1\le\omega_n\le16.2\ \text{rad/s}
+\quad\Longleftrightarrow\quad
+0.27\ \text{s}\le T_p\le0.33\ \text{s}.
+\]
+The window is centred on $\omega_n=14.49$, where $\kappa_P=0$: a pure
+integrator, no zero. Below it the zero is in the right half-plane.
+
+\begin{minipage}[c]{0.44\linewidth}
+\includegraphics[width=\linewidth]{task3_pi_window.pdf}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.47\linewidth}\centering
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$\omega_n$ & $\dfrac{\gamma}{10\zwn}$ & P.O. & $T_p$ [ms]\\
+\midrule
+15 & $3.1$  & 5.00\,\% & $289\to285$\\
+14 & $-3.0$ & 5.00\,\% & $310\to315$\\
+30 & $0.2$  & 7.72\,\% & $145\to109$\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+$T_p$: designed $\to$ measured.
+\end{minipage}
+
+Inside the window the design holds. At $\omega_n=30$ the zero is close and
+the overshoot is 7.7\,\% instead of 5\,\%.
+% ================================================================ TASK 4.1
+\psection{Task 4.1: transfer function of the converter}
+
+Linearized model from Block~2 at $\vb=48$\,V ($\ib=13.82$\,A, $\ub=0.2365$),
+state $\tilde x=[\tilde\imath_L,\ \tilde v_C]^{\!\top}$, input $\tilde u$:
+\[
+A=\begin{bmatrix}-\dfrac{R}{L} & -\dfrac{1-\ub}{L}\\[8pt]
+\dfrac{1-\ub}{C} & -\dfrac{G}{C}\end{bmatrix},
+\qquad
+B=\begin{bmatrix}\dfrac{\vb}{L}\\[8pt]-\dfrac{\ib}{C}\end{bmatrix},
+\qquad
+C_y=\begin{bmatrix}1&0\end{bmatrix}.
+\]
+The inner loop controls the inductor current, so $y=\tilde\imath_L$.
+Transforming $\dot{\tilde x}=A\tilde x+B\tilde u$ with zero initial conditions:
+\[
+(sI-A)X=BU\ \Rightarrow\ X=(sI-A)^{-1}BU,
+\qquad
+G_{iL}(s)=\frac{Y}{U}=C_y\,(sI-A)^{-1}B .
+\]
+With $(sI-A)^{-1}=\operatorname{adj}(sI-A)/\det(sI-A)$, and $C_y$ selecting the
+first row $[\,s-a_{22},\ a_{12}\,]$ of the adjugate:
+
+\begin{keybox}
+\[
+G_{iL}(s)=\frac{b_1 s+a_{12}b_2-a_{22}b_1}
+{s^2-(a_{11}+a_{22})\,s+a_{11}a_{22}-a_{12}a_{21}}
+\]
+\end{keybox}
+
+Poles. The denominator is $\det(sI-A)$, so the poles are the
+eigenvalues of Block~2.
+Zero. The numerator depends on $B$ and on the chosen output:
+\[
+z=a_{22}-a_{12}\frac{b_2}{b_1}
+\quad\Longrightarrow\quad
+\boxed{\,z=-\frac{G}{C}-\frac{(1-\ub)\,\ib}{C\,\vb}\,}
+\]
+$L$ cancels: the zero depends on $C$, $G$ and the operating point only, and
+is in the left half-plane at any operating point.
+
+With $L=0.5$\,mH, $C=150\,\mu$F, $R=98$\,m$\Omega$, $G=2.71$\,mS:
+\[
+G_{iL}(s)=\frac{9.60\cdot10^{4}\,s+1.424\cdot10^{8}}{s^2+214.1\,s+7.776\cdot10^{6}}
+\]
+Poles $-107\pm j2786$\,s$^{-1}$ $(=\operatorname{eig}A)$ and zero
+$-18-1465=-1483$\,s$^{-1}$; MATLAB \texttt{tf(ss(A,B,C\_y,0))} gives the same.
+
+% ================================================================ TASK 4.2
+\psection{Task 4.2: can the zero be ignored?}
+
+Against the plant poles ($\zwn=107$):
+\[
+|z|=1483\ >\ 10\,\zwn=1070 \qquad\text{passes, by a factor 1.4}
+\]
+\begin{itemize}
+\item Replace $(s+a)$ by $a$ to keep the final value:
+\end{itemize}
+\[
+G_{iL,\mathrm{simp}}(s)=\frac{1.424\cdot10^{8}}{s^2+214.1\,s+7.776\cdot10^{6}},
+\qquad
+G_{iL,\mathrm{simp}}(0)=G_{iL}(0)=18.31
+\]
+
+Against the closed-loop poles:
+\begin{itemize}
+\item In $T=N/(D+N)$ feedback moves the poles, not the zero: it stays at $-1483$.
+\item The specification formulas describe the closed loop, so compare with the
+  poles we place: $\zwn=3.0/T_p$ for $\PO=5\,\%$.
+\end{itemize}
+
+\begin{keybox}
+\[
+|z|\ge10\,\zwn=\frac{30}{T_p}
+\quad\Longrightarrow\quad
+T_p\ \ge\ \frac{30}{1483}\approx 20\ \text{ms}
+\]
+\end{keybox}
+
+\begin{itemize}
+\item The plant rings with a period of 2.26\,ms, so 20\,ms is too slow.
+\item At 1\,ms, $10\,\zwn=29\,957$: the zero cannot be neglected.
+\end{itemize}
+
+Redesign for 1\,ms ($|z|$ must be 20 times larger):
+\begin{itemize}
+\item Increase $G$: needs about 2\,S, 5\,kW of loss in a 500\,W
+  converter. That is not plausible.
+\item Reduce $C$: $z\propto1/C$, operating point unchanged, so
+  $C\approx7.4\,\mu$F.
+\item Cost: 20 times the output ripple; $\omega_n$ up by $\sqrt{20}$
+  (444\,Hz to 2\,kHz, a decade below the switching frequency); $\zeta$ from
+  0.038 to 0.022.
+\end{itemize}
+
+\psection{Task 4.3: closed loop with the leaky PI}
+
+Controller $G_c=\kappa_P\dfrac{s+\gamma}{s+p}$, with $\gamma=\kappa_I/\kappa_P$
+($p=0$ is the ordinary PI). Plant
+$G_{iL}=\dfrac{b_1(s+a)}{s^2+a_1s+a_0}$, with $K=b_1a$ and
+\[
+a_1=-(a_{11}+a_{22})=214.1,\quad
+a_0=a_{11}a_{22}-a_{12}a_{21}=7.776\cdot10^{6},\quad
+b_1=9.60\cdot10^{4},\quad a=1483 .
+\]
+From $T=N/(D+N)$:
+
+\begin{keybox}
+\small
+\[
+T_{\mathrm{simp}}=\frac{K\kappa_P(s+\gamma)}
+{s^3+(a_1+p)s^2+(a_0+a_1p+K\kappa_P)s+a_0p+K\kappa_P\gamma}
+\]
+\[
+T_{\mathrm{full}}=\frac{b_1\kappa_P(s+a)(s+\gamma)}
+{s^3+(a_1+p+b_1\kappa_P)s^2+\big(a_0+a_1p+b_1\kappa_P(a+\gamma)\big)s+a_0p+b_1\kappa_Pa\gamma}
+\]
+\end{keybox}
+
+\begin{itemize}
+\item Both are third order, with a controller zero at $-\gamma$.
+\item The $s^2$ coefficient sets the total damping.
+\item Simplified: $a_1+p$. No $\kappa_P$, so damping must come from the leak.
+\item Full: $a_1+p+b_1\kappa_P$. The plant zero lets $\kappa_P$ damp the loop.
+\end{itemize}
+
+\psection{Task 4.4: design and test}
+
+Attempt 1: pole placement on the simplified model for 5\,\%, 1\,ms.
+Poles at $-2996\pm j3142$ and $-r$, with $r=10\,\zwn=29\,957$:
+\[
+p=2\zwn+r-a_1,\quad
+\kappa_P=\frac{\omega_n^2+2\zwn r-a_0-a_1p}{K},\quad
+\gamma=\frac{r\omega_n^2-a_0p}{K\kappa_P}
+\]
+Result: $\kappa_P=1.284$, $\kappa_I=2013$, $\gamma=1567$, $p=35\,735$.
+
+Design 2: pure PI ($p=0$) tuned on the full model for 5\,\%, 0.4\,ms.
+Result: $\kappa_P=0.0628$, $\kappa_I=122$.
+
+\begin{minipage}[c]{0.46\linewidth}
+\includegraphics[width=\linewidth]{task4_designs.pdf}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering
+\small
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Design & Plant & P.O. & $T_p$ & $y(\infty)$\\
+\midrule
+Attempt 1 & simp. & 73.1\,\% & 0.40\,ms & 0.508\\
+Attempt 1 & full  & 66.0\,\% & 0.28\,ms & 0.508\\
+Design 2  & full  & 5.00\,\% & 0.40\,ms & 1.000\\
+Block 2   & full  & 1.44\,\% & 0.32\,ms & 1.000\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+Block 2: $K_{p,i}=0.1$, $K_{i,i}=100$.
+\end{minipage}
+
+\begin{itemize}
+\item Attempt 1 fails: the controller zero at 1567 is far inside
+  $10\,\zwn$, and the leak halves the final value.
+\item Design 2 works: 5\,\% overshoot, no leak, no steady-state error.
+\item 0.4\,ms, not 1\,ms: with the plant zero at $-1483$, well-damped
+  designs peak at 0.3--0.4\,ms.
+\end{itemize}
+
+\psection{Task 4.5: steady-state error of the leak}
+
+For a unit step, $e_{ss}=1-T(0)$. Both models give
+\[
+e_{ss}=\frac{a_0\,p}{a_0\,p+b_1\kappa_P\,a\,\gamma}
+\]
+\begin{center}\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & $p$ [s$^{-1}$] & $e_{ss}$ & P.O. (full plant)\\
+\midrule
+Attempt 1 & 35\,735 & 49.2\,\% & 66.0\,\%\\
+Design 2 & 0 & 0 & 5.00\,\%\\
+Design 2 with a leak & 100 & 4.3\,\% & 8.6\,\%\\
+Design 2 with a leak & 1\,000 & 31\,\% & 38\,\%\\
+\bottomrule
+\end{tabular}
+\end{center}
+We are not satisfied with the compromise. The outer voltage loop relies on
+$i_L$ following its reference, and a 49\,\% error defeats that. The leak was
+only needed because the simplified model has no other source of damping; on
+the full model $p=0$ works and $e_{ss}=0$.
+
+\end{multicols}
+\end{document}
