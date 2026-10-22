@@ -10,7 +10,7 @@ Her er en konkret oppgaveliste for hver person, med leveranser og frister. Felle
 
 ---
 
-### Person 1 – Data
+### Person 1 – Data (Even)
 **Analyse (frist 28. okt)**
 - [ ] Kjør og forstå rensekoden, og skriv den om med egne kommentarer.
 - [ ] Lagre `zomato_india_clean.csv` og lag train/test-splitten én gang, slik at alle bruker de samme radene.
@@ -26,7 +26,7 @@ Her er en konkret oppgaveliste for hver person, med leveranser og frister. Felle
 
 ---
 
-### Person 2 – Utforskende analyse
+### Person 2 – Utforskende analyse (Sindre)
 **Analyse (frist 1. nov)**
 - [ ] Histogram av vurdering
 - [ ] Histogram av pris og stemmer, før og etter log, side om side
@@ -45,7 +45,7 @@ Her er en konkret oppgaveliste for hver person, med leveranser og frister. Felle
 
 ---
 
-### Person 3 – Regresjon
+### Person 3 – Regresjon (Sigurd S) 
 **Analyse (frist 8. nov)**
 - [ ] OLS med statsmodels: `rating ~ log_cost + log_votes + table_booking + online_delivery + city`
 - [ ] Tabell med koeffisienter, standardfeil, p-verdier og 95 %-konfidensintervaller
@@ -60,7 +60,7 @@ Her er en konkret oppgaveliste for hver person, med leveranser og frister. Felle
 
 ---
 
-### Person 4 – Klassifikasjon
+### Person 4 – Klassifikasjon (Elias)
 **Analyse (frist 8. nov)**
 - [ ] Logistisk regresjon med statsmodels på `high_rating` (≥ 3,5), med samme forklaringsvariabler.
 - [ ] Tolk koeffisientene som oddsratio (`np.exp(coef)`).
@@ -75,7 +75,7 @@ Her er en konkret oppgaveliste for hver person, med leveranser og frister. Felle
 
 ---
 
-### Person 5 – Klyngeanalyse
+### Person 5 – Klyngeanalyse (Emil eller Sigurd)
 **Analyse (frist 8. nov)**
 - [ ] Standardiser log(pris), vurdering og log(stemmer).
 - [ ] K-means for K = 1–10, med albueplott for å velge K
@@ -90,7 +90,7 @@ Her er en konkret oppgaveliste for hver person, med leveranser og frister. Felle
 
 ---
 
-### Person 6 – Redaktør og koordinator
+### Person 6 – Redaktør og koordinator (Emil eller sigurd)
 **Underveis**
 - [ ] Følg opp fristene og hold oversikt over hvem som er på etterskudd.
 - [ ] Samle alt i én hovednotebook, som blir kodevedlegget.
